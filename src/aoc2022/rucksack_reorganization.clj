@@ -7,8 +7,8 @@
            [(.substring rucksack 0 length)
             (.substring rucksack length)]))
 
-(defn common-contents [comps]
-      (apply set/intersection (map set comps)))
+(defn common-contents [contents]
+      (apply set/intersection (map set contents)))
 
 (defn priority [item]
       (let [code (int item)]
