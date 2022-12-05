@@ -13,9 +13,6 @@
             ["T" "P" "M" "F" "Z" "C" "G"]
             ])
 
-(def CRATE-MOVER-9000 reverse)
-(def CRATE-MOVER-9001 identity)
-
 (defn parse-instruction [instruction-str]
       (map read-string (re-seq #"\d+" instruction-str)))
 
@@ -24,25 +21,29 @@
            (filter #(re-matches #"^move.*" %))
            (map parse-instruction)))
 
-(defn crate-mover [crane-fn]
+(defn crate-mover [order-fn]
       (fn [stacks index from-index to-index moved]
           (let [stack (get stacks index)]
                (cond (= index from-index) (vec (drop-last (count moved) stack))
-                     (= index to-index) (into stack (crane-fn moved))
+                     (= index to-index) (into stack (order-fn moved))
                      :else stack))))
 
-(defn move-crates [mover]
+(def CRATE-MOVER-9000 (crate-mover reverse))
+
+(def CRATE-MOVER-9001 (crate-mover identity))
+
+(defn move-crates [crate-mover]
       (fn [stacks [number from to]]
             (let [from-index (dec from)
                   to-index (dec to)
                   from-stack (get stacks from-index)
                   moved (take-last number from-stack)]
                  (vec (for [index (range (count stacks))]
-                           (mover stacks index from-index to-index moved))))))
+                           (crate-mover stacks index from-index to-index moved))))))
 
 (defn solve []
       (let [moves (load-moves)
-            part-1 (reduce (move-crates (crate-mover CRATE-MOVER-9000)) start moves)
-            part-2 (reduce (move-crates (crate-mover CRATE-MOVER-9001)) start moves)]
+            part-1 (reduce (move-crates CRATE-MOVER-9000) start moves)
+            part-2 (reduce (move-crates CRATE-MOVER-9001) start moves)]
            (println (apply str (map last part-1)))
            (println (apply str (map last part-2)))))
