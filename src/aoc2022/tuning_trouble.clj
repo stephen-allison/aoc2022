@@ -10,7 +10,7 @@
 
 (defn find-start-position [code block-size]
       (let [indexed-code (map vector (range) (window block-size (seq code)))
-            [index letters] (first (drop-while (comp any-same? second) indexed-code))]
+           [index letters] (first (drop-while (comp any-same? second) indexed-code))]
            (+ index (count letters))))
 
 (defn solve []
