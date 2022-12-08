@@ -1,6 +1,5 @@
 (ns aoc2022.treetop-tree-house
     (:require [aoc2022.loader :as loader])
-    (:require [clojure.string :as str])
     (:require [clojure.set :as set]))
 
 (defn numberify-line [line] (for [s line] (Integer/parseInt (str s))))
