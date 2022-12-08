@@ -8,6 +8,10 @@
 
 (defn start-fs [] {[ROOT] []})
 
+;; directories are modelled as a vector of strings
+;; :fs is a map where keys are directories and values
+;; are vectors containing the files in that directory
+;; have made no effort to model an actual tree
 (defn start-state [] {:fs (start-fs) :cwd [ROOT]})
 
 (defn add-dir [fs parent new-name]
@@ -49,6 +53,8 @@
             :else (follow-path cwd to-str)
             ))
 
+;; see if a reader understands a command string
+;; returns the function to handle it and it's args if so
 (defn try-reader [command [re cmd]]
      (let [match (re-find re command)]
           (if match
@@ -68,6 +74,7 @@
               [#"(\d+) (.*)" do-add-file]
               [#"dir (.*)" do-add-dir]])
 
+;; update state depending on command
 (defn do-command [state command]
       (let [[cmd args] (first (filter not-nil? (map (partial try-reader command) readers)))]
            (if cmd (apply cmd (conj [state] args))
@@ -84,4 +91,4 @@
             required-space 30000000
             to-free (- required-space free-space)
             result-part-2 (apply min (filter #(> % to-free) sizes))]
-           (println (str result-part-1) result-part-2)))
+           (println result-part-1 result-part-2)))
