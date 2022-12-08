@@ -13,20 +13,20 @@
 
 (deftest adding-file
          (let [filesystem (add-dir (start-fs) ["/"] "x")]
-              (is (= {["/"] [] ["/" "x"] [(file "a" 23)]}
+              (is (= {["/"] [] ["/" "x"] [(file "a" "23")]}
                      (add-file filesystem ["/" "x"] {:name "a" :size 23})))))
 
 (deftest simple-directory-size
          (let [fs (add-dir (start-fs) ["/"] "x")
-               fs2 (add-file fs ["/" "x"] (file "a" 23))
-               fs3 (add-file fs2 ["/" "x"] (file "b" 1))]
+               fs2 (add-file fs ["/" "x"] (file "a" "23"))
+               fs3 (add-file fs2 ["/" "x"] (file "b" "1"))]
               (is (= 24 (dir-size fs3 ["/" "x"])))))
 
 (deftest nested-directory-size
          (let [fs (-> (start-fs)
                       (add-dir ["/"] "x")
-                      (add-file ["/" "x"] (file "a" 5))
-                      (add-file ["/"] (file "b" 7)))]
+                      (add-file ["/" "x"] (file "a" "5"))
+                      (add-file ["/"] (file "b" "7")))]
               (is (= 12 (dir-size fs ["/"])))))
 
 (deftest test-subdirs
@@ -58,5 +58,5 @@
          (is (= ["/"] (cd "../.." ["/" "x" "y"]))))
 
 (deftest dir-command-adds-dir
-         (is (= {["/"] [] ["/" "mydir"]}
-                (do-command {:fs (start-fs) :cwd [ROOT]} "dir mydir"))))
+         (is (= {["/"] [] ["/" "mydir"] []}
+                (:fs (do-command (start-state) "dir mydir")))))

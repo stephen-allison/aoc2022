@@ -43,15 +43,14 @@
             :else (conj cwd path-el)))
 
 (defn follow-path [cwd path]
-      (let [els (str/split path #"/")]
-           (reduce update-cwd cwd els)))
+      (let [path-element (str/split path #"/")]
+           (reduce update-cwd cwd path-element)))
 
 (defn cd [to-str cwd]
       (cond (= ROOT to-str) [ROOT]
             (= ".." to-str) (update-cwd cwd to-str)
             (str/starts-with? to-str "/") (into [ROOT] (rest (str/split to-str #"/")))
-            :else (follow-path cwd to-str)
-            ))
+            :else (follow-path cwd to-str)))
 
 ;; see if a reader understands a command string
 ;; returns the function to handle it and it's args if so
