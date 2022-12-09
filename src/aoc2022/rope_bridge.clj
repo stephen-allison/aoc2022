@@ -24,12 +24,7 @@
 
 (defn left [[x y]] [(dec x) y])
 
-(def head-moves {
-                 "U" up
-                 "D" down
-                 "R" right
-                 "L" left
-                 })
+(def head-moves {"U" up "D" down "R" right "L" left})
 
 (defn tail-move-function [[hx hy] [tx ty]]
       (let [dx (- hx tx)
@@ -59,7 +54,7 @@
                  [1 -2] (comp right down)
                  ;; b
                  [-1 -2] (comp left down)
-
+                 ;; needed for part two
                  [2  2] (comp up right)
                  [-2 2] (comp up left)
                  [2 -2] (comp down right)
@@ -75,12 +70,7 @@
       (let [move (tail-move-function head tail)]
            (move tail)))
 
-(defn move-rope [[head tail] action]
-      (let [new-head (new-head-position head action)
-            new-tail (new-tail-position new-head tail)]
-           [new-head new-tail]))
-
-(defn move-long-rope [[head & tail] action]
+(defn move-rope [[head & tail] action]
       (let [new-head (new-head-position head action)]
            (reductions new-tail-position new-head tail)))
 
@@ -88,16 +78,10 @@
 
 (defn start-part-two []  (into [] (repeat 10 [0 0])))
 
-(def sample-actions ["R 4" "U 4" "L 3" "D 1" "R 4" "D 1" "L 5" "R 2"])
-
-(def sample-actions-two ["R 5" "U 8" "L 8" "D 3" "R 17" "D 10" "L 25" "U 20"])
-
-(defn solve-part-one []
+(defn solve []
      (let [actions (unpack-actions (load-actions))
-           moves (reductions move-rope (start) actions)]
-          (count (set (map second moves)))))
-
-(defn solve-part-two []
-      (let [actions (unpack-actions (load-actions))
-            moves (reductions move-long-rope (start-part-two) actions)]
-           (count (set (map last moves)))))
+           moves-one (reductions move-rope (start) actions)
+           moves-two (reductions move-rope (start-part-two) actions)
+           result-one (count (set (map last moves-one)))
+           result-two (count (set (map last moves-two)))]
+          (println result-one result-two)))
