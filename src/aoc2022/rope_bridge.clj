@@ -19,7 +19,7 @@
 
 (def moves {"U" up "D" down "R" right "L" left})
 
-(defn tail-move-function [[hx hy] [tx ty]]
+(defn tail-movement [[hx hy] [tx ty]]
       (let [dx (- hx tx)
             dy (- hy ty)]
            (case [dx dy]
@@ -38,7 +38,7 @@
            (move head)))
 
 (defn move-tail [head tail]
-      (let [move (tail-move-function head tail)]
+      (let [move (tail-movement head tail)]
            (move tail)))
 
 (defn move-rope [[head & tail] action]
@@ -47,10 +47,10 @@
 
 (defn rope [length] (vec (repeat length [0 0])))
 
-(defn unique-tail-positions [moves] (count (set (map last moves))))
+(defn unique-tail-positions [rope-positions] (count (set (map last rope-positions))))
 
 (defn solve []
      (let [actions (unpack-actions (load-actions))
-           moves-one (reductions move-rope (rope 2) actions)
-           moves-two (reductions move-rope (rope 10) actions)]
-          (println (unique-tail-positions moves-one) (unique-tail-positions moves-two))))
+           ropes-1 (reductions move-rope (rope 2) actions)
+           ropes-2 (reductions move-rope (rope 10) actions)]
+          (println (unique-tail-positions ropes-1) (unique-tail-positions ropes-2))))
